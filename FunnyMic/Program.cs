@@ -77,43 +77,49 @@ Console.WriteLine();
 Console.WriteLine($"Playing on {devices[selection].FriendlyName}");
 Console.WriteLine();
 
-Console.WriteLine("Starting FFMpeg...");
+Console.WriteLine("Starting FFmpeg");
 var ffmpeg = Process.Start
 (
-    new ProcessStartInfo(
+    new ProcessStartInfo
+    (
         "./ffmpeg",
         $"-hide_banner " +
-        $"-v quiet " +
+        // enable FFmpeg outputs
+        // $"-v quiet " +
         $"-f dshow " +
-        $"-re " + // in case you play music instead of mic audio :kioShrug:
+        // in case you play music instead of mic audio :kioShrug:
+        // $"-re " +
         $@"-i audio=""{inDevice.FriendlyName}"" " +
         $"-f s16le " +
         $"-map 0:0 " +
         $"-ac 2 " +
         $"-ar 8000 " +
+        // i am stupid
+        // $"-b:a 16K " +
         $"pipe:1"
-        )
-{
-    //CreateNoWindow = true,
-    UseShellExecute = false,    
-    RedirectStandardOutput = true
-} );
+    )
+    {
+        // CreateNoWindow = true,
+        UseShellExecute = false,    
+        RedirectStandardOutput = true
+    }
+);
 
 // var buffer = new byte[8192];
-//
+
 // var sw = Stopwatch.StartNew();
-//
+
 // while (!ffmpeg.HasExited)
 // {
 //     var line = ffmpeg.StandardOutput.BaseStream.Read(buffer, 0, buffer.Length);
 //     Console.WriteLine($"{sw.ElapsedTicks} : Data: {line}");
 // }
-//
+
 // return;
 
-Console.WriteLine("FFMpeg started, initializing audio devices...");
+Console.WriteLine("FFmpeg started, initializing audio devices...");
 
-//var opus = new OpusSource(ffmpeg.StandardOutput.BaseStream, 8000, 2);
+// var opus = new OpusSource(ffmpeg.StandardOutput.BaseStream, 8000, 2);
 
 Console.WriteLine("Initialized opus source");
 
@@ -132,6 +138,5 @@ Console.CancelKeyPress += (_, _) => active = false;
 
 while (active)
 {
-
     Thread.Sleep(40);
 }
